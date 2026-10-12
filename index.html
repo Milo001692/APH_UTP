@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Asistencia — Hogar El Tesoro del Abuelo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --verde:#6db33f;--verde-dark:#4a8c1c;--verde-pale:#f0f8e8;--verde-border:#b8dca0;
+      --azul:#1a6eb5;--azul-pale:#e6f0fb;--azul-border:#7ab0e8;
+      --gray:#f5f7f3;--white:#fff;
+      --text:#1e2d10;--text2:#4a6530;--text3:#8aaa70;
+      --red:#c0392b;--red-bg:#fdecea;--red-border:#f5a09a;--red-text:#8c1f1a;
+      --orange-bg:#fff3e0;--orange-border:#ffb74d;--orange-text:#7a4500;
+      --radius:14px;--radius-sm:8px;
+    }
+    body{font-family:'Montserrat',system-ui,sans-serif;background:var(--gray);color:var(--text);min-height:100vh;}
+
+    /* HEADER */
+    .top-bar{background:var(--verde-dark);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;min-height:72px;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
+    .top-bar-left{display:flex;flex-direction:column;}
+    .top-bar-left .inst{font-size:10px;font-weight:500;color:rgba(255,255,255,0.65);letter-spacing:0.06em;text-transform:uppercase;}
+    .top-bar-left .prog{font-size:16px;font-weight:700;color:#fff;}
+    .top-bar-right{font-size:11px;color:rgba(255,255,255,0.7);text-align:right;line-height:1.7;}
+    .top-bar-right strong{color:#fff;font-size:13px;display:block;}
+
+    /* HERO */
+    .hero{background:linear-gradient(135deg,var(--verde-dark) 0%,var(--verde) 100%);padding:2rem 1.5rem 1.75rem;text-align:center;}
+    .hero .badge{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 14px;font-size:11px;font-weight:600;color:#fff;letter-spacing:0.05em;margin-bottom:.75rem;}
+    .hero h1{font-size:22px;font-weight:700;color:#fff;margin-bottom:6px;}
+    .hero p{font-size:13px;color:rgba(255,255,255,0.8);max-width:460px;margin:0 auto;}
+
+    /* MAIN */
+    .main{max-width:720px;margin:0 auto;padding:2rem 1rem 4rem;}
+
+    /* TABS */
+    .nav-tabs{display:flex;gap:8px;margin-bottom:1.5rem;}
+    .nav-tab{flex:1;height:42px;border:2px solid var(--verde-border);border-radius:var(--radius-sm);background:#fff;color:var(--text2);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:.15s;}
+    .nav-tab.active,.nav-tab:hover{background:var(--verde-dark);color:#fff;border-color:var(--verde-dark);}
+
+    /* SCREENS */
+    .screen{display:none;}
+    .screen.active{display:block;}
+
+    /* CARDS */
+    .card{background:#fff;border-radius:var(--radius);border:1px solid var(--verde-border);padding:1.75rem;margin-bottom:1rem;box-shadow:0 2px 12px rgba(109,179,63,0.07);}
+    .card h2{font-size:15px;font-weight:700;color:var(--verde-dark);margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:2px solid var(--verde-pale);display:flex;align-items:center;gap:8px;}
+
+    /* FORM */
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .form-group{display:flex;flex-direction:column;gap:5px;}
+    .form-group.full{grid-column:1/-1;}
+    .form-group label{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:0.05em;text-transform:uppercase;}
+    .form-group input,.form-group select{height:44px;padding:0 14px;border:1.5px solid #cde0b0;border-radius:var(--radius-sm);font-size:14px;font-family:inherit;color:var(--text);background:#fff;outline:none;transition:border-color .15s,box-shadow .15s;}
+    .form-group input:focus,.form-group select:focus{border-color:var(--verde);box-shadow:0 0 0 3px rgba(109,179,63,0.15);}
+    .form-group input.err{border-color:var(--red);}
+    .field-error{font-size:11px;color:var(--red);display:none;margin-top:2px;}
+
+    /* BTNS */
+    .btn{width:100%;height:50px;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;transition:background .15s,transform .1s;letter-spacing:0.02em;display:flex;align-items:center;justify-content:center;gap:8px;}
+    .btn:active{transform:scale(0.98);}
+    .btn:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+    .btn-green{background:var(--verde);color:#fff;}
+    .btn-green:hover:not(:disabled){background:var(--verde-dark);}
+    .btn-red-out{background:#e24b4a;color:#fff;}
+    .btn-red-out:hover:not(:disabled){background:#b71c1c;}
+    .btn-outline{height:42px;padding:0 24px;width:auto;border:2px solid var(--verde-dark);border-radius:var(--radius-sm);background:transparent;color:var(--verde-dark);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:.15s;}
+    .btn-outline:hover{background:var(--verde-pale);}
+
+    /* BANNERS */
+    .banner{border-radius:var(--radius-sm);padding:13px 16px;font-size:13px;font-weight:500;margin-bottom:1rem;display:none;align-items:flex-start;gap:10px;line-height:1.5;}
+    .banner.show{display:flex;}
+    .banner-red{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red-text);}
+    .banner-green{background:#eaf5e3;border:1px solid #7ec96a;color:#1a6e2e;}
+    .banner-orange{background:var(--orange-bg);border:1px solid var(--orange-border);color:var(--orange-text);}
+    .banner-blue{background:var(--azul-pale);border:1px solid var(--azul-border);color:#1a3a6e;}
+
+    /* GPS STATUS */
+    .gps-box{background:var(--verde-pale);border:1.5px solid var(--verde-border);border-radius:var(--radius-sm);padding:12px 16px;margin-bottom:1rem;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text2);}
+    .gps-box.error{background:var(--red-bg);border-color:var(--red-border);color:var(--red-text);}
+    .gps-box.warning{background:var(--orange-bg);border-color:var(--orange-border);color:var(--orange-text);}
+    .gps-dot{width:10px;height:10px;border-radius:50%;background:#ccc;flex-shrink:0;}
+    .gps-dot.ok{background:#4caf50;box-shadow:0 0 0 3px rgba(76,175,80,0.2);}
+    .gps-dot.err{background:#e53935;}
+    .gps-dot.warn{background:#ff9800;}
+    .gps-dot.loading{background:#ff9800;animation:pulse 1s infinite;}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+    /* SALIDA PANEL */
+    .salida-info{background:var(--azul-pale);border:1.5px solid var(--azul-border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:1rem;}
+    .salida-info .si-title{font-size:12px;font-weight:700;color:var(--azul);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;}
+    .salida-info .si-name{font-size:16px;font-weight:700;color:var(--text);margin-bottom:2px;}
+    .salida-info .si-detail{font-size:12px;color:var(--text2);}
+
+    /* TABLA */
+    .tabla-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px;}
+    .tabla-top h2{font-size:16px;font-weight:700;color:var(--verde-dark);}
+    .count-pill{font-size:12px;background:var(--verde-pale);border:1px solid var(--verde-border);color:var(--verde-dark);border-radius:20px;padding:3px 14px;font-weight:700;}
+    .filters{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;}
+    .filters input,.filters select{height:38px;padding:0 12px;border:1.5px solid var(--verde-border);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;color:var(--text);background:#fff;outline:none;flex:1;min-width:140px;}
+    .table-wrap{background:#fff;border:1px solid var(--verde-border);border-radius:var(--radius);overflow:hidden;overflow-x:auto;box-shadow:0 2px 12px rgba(109,179,63,0.07);}
+    table{width:100%;border-collapse:collapse;font-size:12px;min-width:760px;}
+    thead tr{background:var(--verde-dark);}
+    thead th{padding:11px 12px;font-size:10px;font-weight:700;color:#fff;text-align:left;letter-spacing:0.05em;white-space:nowrap;}
+    thead th.center{text-align:center;}
+    tbody tr{border-bottom:1px solid #e8f0e0;transition:background .15s;}
+    tbody tr:last-child{border-bottom:none;}
+    tbody tr:hover{background:var(--verde-pale);}
+    tbody tr.new-row{background:#d4edda;}
+    td{padding:11px 12px;color:var(--text);vertical-align:middle;}
+    td.center{text-align:center;}
+    .chip{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;border:1.5px solid transparent;white-space:nowrap;}
+    .chip-green{background:#eaf5e3;border-color:#7ec96a;color:#1a6e2e;}
+    .chip-blue{background:var(--azul-pale);border-color:var(--azul-border);color:#1a3a6e;}
+    .chip-orange{background:var(--orange-bg);border-color:var(--orange-border);color:var(--orange-text);}
+    .empty-row td,.loading-row td{text-align:center;color:var(--text3);padding:2.5rem;font-size:14px;}
+    .map-link{font-size:11px;color:var(--azul);text-decoration:none;font-weight:600;}
+    .map-link:hover{text-decoration:underline;}
+
+    /* ADMIN */
+    .admin-toggle-wrap{text-align:center;margin-top:2.5rem;}
+    .admin-toggle-btn{background:none;border:none;font-size:12px;color:var(--text3);cursor:pointer;text-decoration:underline;font-family:inherit;}
+    .admin-panel{background:#fff;border:1px solid var(--verde-border);border-radius:var(--radius);padding:1.25rem;margin-top:.75rem;display:none;}
+    .admin-panel label{font-size:13px;color:var(--text2);display:block;margin-bottom:6px;font-weight:600;}
+    .admin-row{display:flex;gap:8px;}
+    .admin-row input{flex:1;height:40px;padding:0 12px;border:1.5px solid var(--verde-border);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;outline:none;}
+    .btn-admin{height:40px;padding:0 16px;border-radius:var(--radius-sm);background:#e24b4a;color:#fff;border:none;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;}
+    .admin-error{font-size:12px;color:var(--red);margin-top:4px;display:none;}
+
+    .divider{border:none;border-top:1px solid var(--verde-border);margin:1.25rem 0;}
+
+    @media(max-width:540px){
+      .form-grid{grid-template-columns:1fr;}
+      .form-group.full{grid-column:1;}
+      .top-bar{padding:0 1rem;min-height:60px;}
+      .main{padding:1.25rem .75rem 3rem;}
+      .hero h1{font-size:18px;}
+      .nav-tabs{flex-direction:column;}
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-left">
+    <span class="inst">Fundación Universitaria del Área Andina</span>
+    <span class="prog">Atención Prehospitalaria</span>
+  </div>
+  <div class="top-bar-right">
+    <strong>🏠 El Tesoro del Abuelo</strong>
+    Control de asistencia
+  </div>
+</div>
+
+<div class="hero">
+  <div class="badge">📍 Práctica clínica geriátrica</div>
+  <h1>Control de Asistencia</h1>
+  <p>Hogar Geriátrico El Tesoro del Abuelo — Registro de entrada y salida con verificación de ubicación.</p>
+</div>
+
+<div class="main">
+
+  <div class="nav-tabs">
+    <button class="nav-tab active" id="tab-btn-registro" onclick="switchTab('registro')">📋 Registrar asistencia</button>
+    <button class="nav-tab" id="tab-btn-salida" onclick="switchTab('salida')">🚪 Marcar salida</button>
+    <button class="nav-tab" id="tab-btn-tabla" onclick="switchTab('tabla')">📊 Ver registros</button>
+  </div>
+
+  <!-- ══ PANTALLA REGISTRO ══ -->
+  <div class="screen active" id="tab-registro">
+    <div class="card">
+      <h2>🩺 Datos del estudiante — Entrada</h2>
+
+      <div id="gps-status-entrada" class="gps-box">
+        <div class="gps-dot loading" id="gps-dot-entrada"></div>
+        <span id="gps-text-entrada">Obteniendo tu ubicación GPS...</span>
+      </div>
+
+      <div class="banner banner-red" id="banner-lejos-entrada">
+        📍 <span id="banner-lejos-entrada-txt"></span>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group full">
+          <label for="f-nombre">Nombre completo</label>
+          <input type="text" id="f-nombre" placeholder="Ej: María Fernanda López Gómez" maxlength="80" autocomplete="off"/>
+          <span class="field-error" id="err-nombre">Ingresa tu nombre completo.</span>
+        </div>
+        <div class="form-group">
+          <label for="f-cedula">Número de cédula</label>
+          <input type="text" id="f-cedula" placeholder="1234567890" maxlength="12" autocomplete="off"/>
+          <span class="field-error" id="err-cedula">Ingresa tu cédula.</span>
+        </div>
+        <div class="form-group">
+          <label for="f-telefono">Teléfono</label>
+          <input type="tel" id="f-telefono" placeholder="3001234567" maxlength="15" autocomplete="off"/>
+          <span class="field-error" id="err-telefono">Ingresa tu teléfono.</span>
+        </div>
+        <div class="form-group">
+          <label for="f-grupo">Nombre del grupo</label>
+          <input type="text" id="f-grupo" placeholder="Ej: Grupo 3A" maxlength="40" autocomplete="off"/>
+          <span class="field-error" id="err-grupo">Ingresa el nombre del grupo.</span>
+        </div>
+        <div class="form-group">
+          <label for="f-pareja">Nombre de la pareja</label>
+          <input type="text" id="f-pareja" placeholder="Ej: Carlos Ruiz" maxlength="80" autocomplete="off"/>
+          <span class="field-error" id="err-pareja">Ingresa el nombre de tu pareja.</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <button class="btn btn-green" id="btn-registrar" onclick="registrarEntrada()">
+        ✅ Registrar entrada
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ PANTALLA SALIDA ══ -->
+  <div class="screen" id="tab-salida">
+    <div class="card">
+      <h2>🚪 Marcar salida</h2>
+
+      <div id="gps-status-salida" class="gps-box">
+        <div class="gps-dot loading" id="gps-dot-salida"></div>
+        <span id="gps-text-salida">Obteniendo tu ubicación GPS...</span>
+      </div>
+
+      <div class="banner banner-red" id="banner-lejos-salida">
+        📍 <span id="banner-lejos-salida-txt"></span>
+      </div>
+
+      <div class="form-group" style="margin-bottom:1rem">
+        <label for="f-cedula-salida">Cédula para identificarte</label>
+        <input type="text" id="f-cedula-salida" placeholder="Ingresa tu cédula" maxlength="12" autocomplete="off"/>
+        <span class="field-error" id="err-cedula-salida">Ingresa tu cédula.</span>
+      </div>
+
+      <div class="banner banner-blue show" id="info-salida-inicial">
+        ℹ️ Ingresa tu cédula para ver tu registro de entrada activo y marcar la salida.
+      </div>
+
+      <div id="salida-panel" style="display:none">
+        <div class="salida-info">
+          <div class="si-title">Registro activo encontrado</div>
+          <div class="si-name" id="si-nombre"></div>
+          <div class="si-detail" id="si-detalle"></div>
+        </div>
+        <button class="btn btn-red-out" id="btn-salida" onclick="marcarSalida()">
+          🚪 Confirmar salida
+        </button>
+      </div>
+
+      <div class="banner banner-red" id="banner-no-entrada" style="display:none">
+        ⚠️ No se encontró un registro de entrada activo para esta cédula. Primero debes registrar tu entrada.
+      </div>
+
+      <div class="banner banner-orange" id="banner-ya-salio" style="display:none">
+        ✅ Esta cédula ya tiene entrada Y salida registradas.
+      </div>
+
+      <div style="margin-top:1rem" id="btn-buscar-wrap">
+        <button class="btn btn-green" onclick="buscarEntrada()">🔍 Buscar mi registro</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PANTALLA TABLA ══ -->
+  <div class="screen" id="tab-tabla">
+    <div class="tabla-top">
+      <h2>Registros de asistencia</h2>
+      <span class="count-pill" id="count-pill">0</span>
+    </div>
+    <div class="filters">
+      <input type="text" id="buscador" placeholder="🔍 Buscar nombre o cédula..." oninput="renderTabla()"/>
+      <select id="filtro-estado" onchange="renderTabla()">
+        <option value="">Todos los estados</option>
+        <option value="activo">Solo entrada (activos)</option>
+        <option value="completo">Entrada + Salida</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nombre</th>
+            <th>Cédula</th>
+            <th>Grupo</th>
+            <th>Pareja</th>
+            <th class="center">Entrada</th>
+            <th class="center">Salida</th>
+            <th class="center">Duración</th>
+            <th class="center">Estado</th>
+            <th class="center">Ubicación</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-body">
+          <tr class="loading-row"><td colspan="10">Cargando registros...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="admin-toggle-wrap">
+    <button class="admin-toggle-btn" onclick="toggleAdmin()">⚙️ Panel de administrador</button>
+  </div>
+  <div class="admin-panel" id="admin-panel">
+    <label>Contraseña de administrador</label>
+    <div class="admin-row">
+      <input type="password" id="admin-pass" placeholder="Contraseña..."/>
+      <button class="btn-admin" onclick="resetRegistros()">Borrar todos los registros</button>
+    </div>
+    <p class="admin-error" id="admin-error">Contraseña incorrecta.</p>
+  </div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDJmKhLbxQOxNzVI35hwDsN3FCttiUS6E8",
+  authDomain: "polla-mundial-42fda.firebaseapp.com",
+  projectId: "polla-mundial-42fda",
+  storageBucket: "polla-mundial-42fda.firebasestorage.app",
+  messagingSenderId: "176255557121",
+  appId: "1:176255557121:web:b852e20b8bf1e1345dea00"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+const COL = "asistencia_tesoro_abuelo";
+const ADMIN_PASS = "admin123";
+
+// Coordenadas del Hogar El Tesoro del Abuelo
+const HOGAR_LAT  =  4.813969;
+const HOGAR_LNG  = -75.658272;
+const MAX_METROS = 1000; // 1 km
+
+let registros = [];
+let lastNombre = null;
+let posActual  = null;
+let posOk      = false;
+let registroBuscado = null;
+
+// ── GPS ───────────────────────────────────────────────────────
+function haversineMetros(lat1,lon1,lat2,lon2){
+  const R=6371000;
+  const dLat=(lat2-lat1)*Math.PI/180;
+  const dLon=(lon2-lon1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+function actualizarGPSUI(screen, pos, metros){
+  const dot  = document.getElementById(`gps-dot-${screen}`);
+  const txt  = document.getElementById(`gps-text-${screen}`);
+  const bannerLejos = document.getElementById(`banner-lejos-${screen}`);
+  const bannerTxt   = document.getElementById(`banner-lejos-${screen}-txt`);
+  if(!dot||!txt) return;
+  if(metros <= MAX_METROS){
+    dot.className='gps-dot ok';
+    txt.textContent=`📍 Ubicación verificada — estás a ${Math.round(metros)} m del Hogar El Tesoro del Abuelo ✅`;
+    document.getElementById(`gps-status-${screen}`).className='gps-box';
+    if(bannerLejos) bannerLejos.classList.remove('show');
+  } else {
+    dot.className='gps-dot err';
+    txt.textContent=`⛔ Estás a ${Math.round(metros)} m del hogar. Debes estar dentro de ${MAX_METROS} m para registrar.`;
+    document.getElementById(`gps-status-${screen}`).className='gps-box error';
+    if(bannerLejos && bannerTxt){
+      bannerTxt.textContent=`No puedes registrar desde esta ubicación. Estás a ${Math.round(metros)} m del Hogar El Tesoro del Abuelo. El máximo permitido es ${MAX_METROS} m. Debes estar físicamente en el lugar.`;
+      bannerLejos.classList.add('show');
+    }
+  }
+}
+
+function obtenerGPS(){
+  if(!navigator.geolocation){
+    ['entrada','salida'].forEach(s=>{
+      const d=document.getElementById(`gps-dot-${s}`);
+      const t=document.getElementById(`gps-text-${s}`);
+      if(d) d.className='gps-dot err';
+      if(t) t.textContent='Tu navegador no soporta GPS. Usa Chrome o Safari actualizado.';
+    });
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      posActual=pos;
+      const metros=haversineMetros(pos.coords.latitude,pos.coords.longitude,HOGAR_LAT,HOGAR_LNG);
+      posOk=(metros<=MAX_METROS);
+      ['entrada','salida'].forEach(s=>actualizarGPSUI(s,pos,metros));
+    },
+    err=>{
+      let msg='No se pudo obtener tu ubicación.';
+      if(err.code===1) msg='Debes permitir el acceso a tu ubicación para registrar asistencia.';
+      else if(err.code===2) msg='No se pudo determinar tu posición. Verifica el GPS de tu dispositivo.';
+      ['entrada','salida'].forEach(s=>{
+        const d=document.getElementById(`gps-dot-${s}`);
+        const t=document.getElementById(`gps-text-${s}`);
+        if(d) d.className='gps-dot err';
+        if(t) t.textContent=msg;
+        const el=document.getElementById(`gps-status-${s}`);
+        if(el) el.className='gps-box error';
+      });
+      posOk=false;
+    },
+    {enableHighAccuracy:true,timeout:15000,maximumAge:0}
+  );
+}
+
+obtenerGPS();
+
+// ── FIREBASE LISTENER ─────────────────────────────────────────
+const q=query(collection(db,COL),orderBy("entradaTs","desc"));
+onSnapshot(q,snap=>{
+  registros=snap.docs.map(d=>({id:d.id,...d.data()}));
+  document.getElementById('count-pill').textContent=registros.length;
+  renderTabla();
+});
+
+// ── REGISTRO ENTRADA ─────────────────────────────────────────
+window.registrarEntrada = async function(){
+  const nombre  = document.getElementById('f-nombre').value.trim();
+  const cedula  = document.getElementById('f-cedula').value.trim();
+  const telefono= document.getElementById('f-telefono').value.trim();
+  const grupo   = document.getElementById('f-grupo').value.trim();
+  const pareja  = document.getElementById('f-pareja').value.trim();
+
+  let ok=true;
+  [['f-nombre','err-nombre',nombre.length<4],
+   ['f-cedula','err-cedula',cedula.length<5||!/^\d+$/.test(cedula)],
+   ['f-telefono','err-telefono',telefono.length<7],
+   ['f-grupo','err-grupo',grupo.length<2],
+   ['f-pareja','err-pareja',pareja.length<3]
+  ].forEach(([fid,eid,fail])=>{
+    const inp=document.getElementById(fid);
+    const err=document.getElementById(eid);
+    if(fail){inp.classList.add('err');err.style.display='block';ok=false;}
+    else{inp.classList.remove('err');err.style.display='none';}
+  });
+  if(!ok) return;
+
+  // Verificar GPS
+  if(!posActual){
+    alert('Aún no se ha obtenido tu ubicación GPS. Espera un momento o recarga la página y permite el acceso a la ubicación.');
+    obtenerGPS(); return;
+  }
+  const metros=haversineMetros(posActual.coords.latitude,posActual.coords.longitude,HOGAR_LAT,HOGAR_LNG);
+  if(metros>MAX_METROS){
+    alert(`⛔ No puedes registrar tu entrada desde aquí.\n\nEstás a ${Math.round(metros)} m del Hogar El Tesoro del Abuelo.\nDebes estar dentro de ${MAX_METROS} m.`);
+    return;
+  }
+
+  // Verificar duplicado (entrada activa sin salida)
+  const activo=registros.find(r=>r.cedula===cedula && !r.salidaTs);
+  if(activo){
+    alert(`⚠️ Ya tienes una entrada activa registrada el ${formatFecha(activo.entradaTs)}.\nDebes marcar tu salida antes de registrar una nueva entrada.`);
+    return;
+  }
+
+  const btn=document.getElementById('btn-registrar');
+  btn.disabled=true; btn.textContent='Guardando...';
+
+  const ahora=Date.now();
+  try{
+    await addDoc(collection(db,COL),{
+      nombre, cedula, telefono, grupo, pareja,
+      entradaTs: ahora,
+      entradaLat: posActual.coords.latitude,
+      entradaLng: posActual.coords.longitude,
+      entradaAcc: Math.round(posActual.coords.accuracy),
+      salidaTs: null, salidaLat: null, salidaLng: null,
+      duracionMin: null
+    });
+    lastNombre=nombre;
+    // Limpiar form
+    ['f-nombre','f-cedula','f-telefono','f-grupo','f-pareja'].forEach(id=>document.getElementById(id).value='');
+    alert(`✅ Entrada registrada correctamente.\n\n👤 ${nombre}\n📅 ${formatFechaHora(ahora)}\n📍 A ${Math.round(metros)} m del hogar\n\nRecuerda marcar tu salida cuando termines.`);
+    switchTab('tabla');
+  }catch(e){
+    alert('Error al guardar. Verifica tu conexión a internet.');
+    console.error(e);
+  }
+  btn.disabled=false; btn.textContent='✅ Registrar entrada';
+};
+
+// ── BUSCAR ENTRADA PARA SALIDA ────────────────────────────────
+window.buscarEntrada = function(){
+  const cedula=document.getElementById('f-cedula-salida').value.trim();
+  const errEl=document.getElementById('err-cedula-salida');
+  document.getElementById('salida-panel').style.display='none';
+  document.getElementById('banner-no-entrada').style.display='none';
+  document.getElementById('banner-ya-salio').style.display='none';
+  document.getElementById('info-salida-inicial').classList.remove('show');
+
+  if(cedula.length<5||!/^\d+$/.test(cedula)){errEl.style.display='block';return;}
+  errEl.style.display='none';
+
+  const activo=registros.find(r=>r.cedula===cedula && !r.salidaTs);
+  const completo=registros.find(r=>r.cedula===cedula && r.salidaTs);
+
+  if(activo){
+    registroBuscado=activo;
+    document.getElementById('si-nombre').textContent=activo.nombre;
+    document.getElementById('si-detalle').textContent=
+      `Grupo: ${activo.grupo} · Pareja: ${activo.pareja} · Entrada: ${formatFechaHora(activo.entradaTs)}`;
+    document.getElementById('salida-panel').style.display='block';
+  } else if(completo){
+    document.getElementById('banner-ya-salio').style.display='flex';
+  } else {
+    document.getElementById('banner-no-entrada').style.display='flex';
+  }
+};
+
+// ── MARCAR SALIDA ─────────────────────────────────────────────
+window.marcarSalida = async function(){
+  if(!registroBuscado){ alert('Primero busca tu registro.'); return; }
+
+  if(!posActual){
+    alert('Aún no se ha obtenido tu ubicación. Espera un momento.');
+    obtenerGPS(); return;
+  }
+  const metros=haversineMetros(posActual.coords.latitude,posActual.coords.longitude,HOGAR_LAT,HOGAR_LNG);
+  if(metros>MAX_METROS){
+    alert(`⛔ No puedes marcar tu salida desde aquí.\n\nEstás a ${Math.round(metros)} m del Hogar El Tesoro del Abuelo.\nDebes estar dentro de ${MAX_METROS} m.`);
+    return;
+  }
+
+  const btn=document.getElementById('btn-salida');
+  btn.disabled=true; btn.textContent='Guardando salida...';
+
+  const ahora=Date.now();
+  const duracionMin=Math.round((ahora-registroBuscado.entradaTs)/60000);
+
+  try{
+    await updateDoc(doc(db,COL,registroBuscado.id),{
+      salidaTs: ahora,
+      salidaLat: posActual.coords.latitude,
+      salidaLng: posActual.coords.longitude,
+      duracionMin
+    });
+    document.getElementById('salida-panel').style.display='none';
+    document.getElementById('f-cedula-salida').value='';
+    registroBuscado=null;
+    alert(`✅ Salida registrada correctamente.\n\n👤 ${registroBuscado?.nombre||'Estudiante'}\n⏱️ Tiempo en el hogar: ${formatDuracion(duracionMin)}\n📅 ${formatFechaHora(ahora)}`);
+    switchTab('tabla');
+  }catch(e){
+    alert('Error al guardar la salida. Verifica tu conexión.');
+    console.error(e);
+  }
+  btn.disabled=false; btn.textContent='🚪 Confirmar salida';
+};
+
+// ── TABLA ─────────────────────────────────────────────────────
+window.renderTabla = function(){
+  const tbody=document.getElementById('tabla-body');
+  const filtro=document.getElementById('buscador')?.value?.toLowerCase()||'';
+  const estado=document.getElementById('filtro-estado')?.value||'';
+
+  let lista=registros;
+  if(filtro) lista=lista.filter(r=>r.nombre?.toLowerCase().includes(filtro)||String(r.cedula).includes(filtro)||r.grupo?.toLowerCase().includes(filtro));
+  if(estado==='activo') lista=lista.filter(r=>!r.salidaTs);
+  if(estado==='completo') lista=lista.filter(r=>r.salidaTs);
+
+  if(lista.length===0){
+    tbody.innerHTML='<tr class="empty-row"><td colspan="10">No hay registros que coincidan.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML=lista.map((r,i)=>{
+    const tieneS=!!r.salidaTs;
+    const mapUrl=`https://www.google.com/maps?q=${r.entradaLat},${r.entradaLng}`;
+    const mapUrlS=r.salidaLat?`https://www.google.com/maps?q=${r.salidaLat},${r.salidaLng}`:'';
+    return `<tr class="${r.nombre===lastNombre&&i===0?'new-row':''}">
+      <td class="pos" style="color:var(--text3);font-size:11px">${i+1}</td>
+      <td><strong>${esc(r.nombre||'')}</strong></td>
+      <td>${esc(r.cedula||'')}</td>
+      <td>${esc(r.grupo||'')}</td>
+      <td style="font-size:11px">${esc(r.pareja||'')}</td>
+      <td class="center" style="font-size:11px;white-space:nowrap">${formatFechaHora(r.entradaTs)}</td>
+      <td class="center" style="font-size:11px;white-space:nowrap">${tieneS?formatFechaHora(r.salidaTs):'<span style="color:var(--text3)">Pendiente</span>'}</td>
+      <td class="center">${tieneS?`<span class="chip chip-blue">${formatDuracion(r.duracionMin)}</span>`:'<span style="color:var(--text3);font-size:11px">—</span>'}</td>
+      <td class="center">${tieneS?'<span class="chip chip-green">Completo</span>':'<span class="chip chip-orange">En hogar</span>'}</td>
+      <td class="center">
+        <a class="map-link" href="${mapUrl}" target="_blank" title="Ver entrada en mapa">📍E</a>
+        ${mapUrlS?`<a class="map-link" href="${mapUrlS}" target="_blank" title="Ver salida en mapa" style="margin-left:6px">📍S</a>`:''}
+      </td>
+    </tr>`;
+  }).join('');
+};
+
+// ── TABS ──────────────────────────────────────────────────────
+window.switchTab = function(tab){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  ['registro','salida','tabla'].forEach(t=>{
+    document.getElementById(`tab-btn-${t}`).classList.toggle('active',t===tab);
+  });
+  if(tab==='tabla') renderTabla();
+  if(tab==='salida') obtenerGPS();
+};
+
+// ── ADMIN ─────────────────────────────────────────────────────
+window.toggleAdmin=function(){
+  const p=document.getElementById('admin-panel');
+  p.style.display=p.style.display==='none'?'block':'none';
+  document.getElementById('admin-error').style.display='none';
+};
+window.resetRegistros=async function(){
+  const pass=document.getElementById('admin-pass').value;
+  if(pass!==ADMIN_PASS){document.getElementById('admin-error').style.display='block';return;}
+  if(!confirm('¿Seguro que deseas borrar TODOS los registros de asistencia? Esta acción no se puede deshacer.')) return;
+  const btn=document.querySelector('.btn-admin');
+  btn.disabled=true;btn.textContent='Borrando...';
+  try{
+    const snap=await getDocs(collection(db,COL));
+    await Promise.all(snap.docs.map(d=>deleteDoc(doc(db,COL,d.id))));
+    lastNombre=null;
+  }catch(e){ console.error(e); }
+  btn.disabled=false;btn.textContent='Borrar todos los registros';
+  document.getElementById('admin-pass').value='';
+  document.getElementById('admin-panel').style.display='none';
+  document.getElementById('admin-error').style.display='none';
+};
+
+// ── HELPERS ───────────────────────────────────────────────────
+function formatFechaHora(ts){
+  if(!ts) return '—';
+  const d=new Date(ts);
+  return d.toLocaleDateString('es-CO',{day:'2-digit',month:'2-digit',year:'numeric'})+
+    ' '+d.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
+}
+function formatFecha(ts){
+  if(!ts) return '—';
+  return new Date(ts).toLocaleDateString('es-CO',{day:'2-digit',month:'2-digit',year:'numeric'});
+}
+function formatDuracion(min){
+  if(min===null||min===undefined) return '—';
+  if(min<60) return `${min} min`;
+  return `${Math.floor(min/60)}h ${min%60}min`;
+}
+function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+</script>
+</body>
+</html>
